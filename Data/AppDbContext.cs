@@ -32,5 +32,55 @@ namespace InventoryApp.Data
             modelBuilder.Entity<ProductSale>()
                 .HasKey(ps => new { ps.ProductId, ps.SaleId });
         }
+
+        public void SeedDatabase()
+        {
+            if (!Suppliers.Any())
+            {
+                Suppliers.AddRange(
+                    new Supplier { Name = "Метро" },
+                    new Supplier { Name = "Булмаг" },
+                    new Supplier { Name = "Верея" },
+                    new Supplier { Name = "Дерони" }
+                );
+            }
+
+            if (!Categories.Any())
+            {
+                Categories.AddRange(
+                    new Category { Name = "Месо" },
+                    new Category { Name = "Млечни" },
+                    new Category { Name = "Плодове" },
+                    new Category { Name = "Зеленчуци" }
+                );
+            }
+
+            SaveChanges();
+
+            if (!Products.Any())
+            {
+                var metro = Suppliers.First(s => s.Name == "Метро");
+                var mlechni = Categories.First(c => c.Name == "Млечни");
+
+                var product1 = new Product
+                {
+                    Name = "Кисело мляко",
+                    Price = 2,
+                    Quantity = 100,
+                    SupplierId = metro.Id
+                };
+                Products.Add(product1);
+                SaveChanges();
+
+                ProductCategories.Add(new ProductCategory
+                {
+                    ProductId = product1.Id,
+                    CategoryId = mlechni.Id
+                });
+
+                SaveChanges();
+            }
+        }
+
     }
 }

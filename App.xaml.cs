@@ -1,13 +1,18 @@
-﻿using System.Configuration;
-using System.Data;
+﻿
 using System.Windows;
 
-namespace InventoryApp;
-
-/// <summary>
-/// Interaction logic for App.xaml
-/// </summary>
-public partial class App : Application
+using InventoryApp.Data;
+namespace InventoryApp
 {
-}
+    public partial class App : Application
+    {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
 
+            using var context = new AppDbContext();
+            context.Database.EnsureCreated();
+            context.SeedDatabase();
+        }
+    }
+}

@@ -17,6 +17,8 @@ namespace InventoryApp.Models
         public Supplier Supplier { get; set; }
 
         public ICollection<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
+
+
         public ICollection<ProductSale> ProductSales { get; set; } = new List<ProductSale>(); 
     }
 }

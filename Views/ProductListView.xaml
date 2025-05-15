@@ -4,12 +4,16 @@
              xmlns:vm="clr-namespace:InventoryApp.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="800">
 
     <UserControl.DataContext>
         <vm:ProductViewModel />
     </UserControl.DataContext>
+
+
+
 
     <DockPanel>
 
@@ -24,21 +28,24 @@
                       ItemsSource="{Binding Suppliers}" DisplayMemberPath="Name"
                       SelectedItem="{Binding SelectedSupplier}" />
             <Button Content="Добави" Margin="5" Command="{Binding AddCommand}" />
-            <Button Content="Редактирай" Margin="5" Command="{Binding EditCommand}" 
-                    IsEnabled="{Binding CanEdit}" />
-            <Button Content="Изтрий" Margin="5" Command="{Binding DeleteCommand}" 
-                    IsEnabled="{Binding CanDelete}" />
+            <Button Content="Редактирай" Margin="5" Command="{Binding EditCommand}"  />
+            <Button Content="Изтрий" Margin="5" Command="{Binding DeleteCommand}" />
         </StackPanel>
 
         <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding Products}">
-                <ItemsControl.ItemsPanel>
+            <ListBox ItemsSource="{Binding Products}"
+         SelectedItem="{Binding SelectedProduct, Mode=TwoWay}"
+         Background="Transparent"
+         BorderThickness="0"
+         Margin="10">
+
+                <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel />
                     </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
+                </ListBox.ItemsPanel>
 
-                <ItemsControl.ItemTemplate>
+                <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="5" Width="220">
                             <StackPanel>
@@ -49,12 +56,24 @@
                                 <TextBlock Text="{Binding Quantity}"/>
                                 <TextBlock Text="Доставчик:"/>
                                 <TextBlock Text="{Binding Supplier.Name}"/>
+                                <ItemsControl ItemsSource="{Binding ProductCategories}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock>
+                                                 <Run Text="• " />
+                                                <Run Text="{Binding Category.Name}" />
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
                                 <Button Content="Добави в количка" Margin="5"/>
                             </StackPanel>
                         </Border>
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
         </ScrollViewer>
 
     </DockPanel>

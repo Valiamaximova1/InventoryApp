@@ -1,0 +1,57 @@
+﻿<Window x:Class="InventoryApp.Views.AddEditProductWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"   
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:InventoryApp.Behaviors"
+
+        Title="Добави продукт" Height="400" Width="400">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Име:" Grid.Row="0" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="0" Margin="100,0,0,5" Text="{Binding Name}" />
+
+        <TextBlock Text="Цена:" Grid.Row="1" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="1" Margin="100,0,0,5" Text="{Binding Price}" />
+
+        <TextBlock Text="Количество:" Grid.Row="2" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="2" Margin="100,0,0,5" Text="{Binding Quantity}" />
+
+        <TextBlock Text="Доставчик:" Grid.Row="3" VerticalAlignment="Center"/>
+        <ComboBox Grid.Row="3" Margin="100,0,0,5"
+              ItemsSource="{Binding Suppliers}"
+              DisplayMemberPath="Name"
+              SelectedValue="{Binding SupplierId}"
+              SelectedValuePath="Id" />
+
+        <TextBlock Text="Категории:" Grid.Row="4" VerticalAlignment="Top"/>
+        <ListBox Grid.Row="5" ItemsSource="{Binding Categories}"
+         DisplayMemberPath="Name"
+         SelectionMode="Multiple">
+            <i:Interaction.Behaviors>
+                <local:SelectedItemsBehavior SelectedItems="{Binding SelectedCategories}" />
+            </i:Interaction.Behaviors>
+        </ListBox>
+
+        <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button Content="Запази" Width="80" Margin="5" Command="{Binding SaveCommand}" />
+            <Button Content="Отказ" Width="80" Margin="5" Command="{Binding CancelCommand}" />
+        </StackPanel>
+    </Grid>
+
+</Window>
