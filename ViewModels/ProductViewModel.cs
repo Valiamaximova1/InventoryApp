@@ -21,12 +21,17 @@ namespace InventoryApp.ViewModels
         public ObservableCollection<Supplier> Suppliers { get; set; } = new();
         public ObservableCollection<Category> Categories { get; set; } = new();
 
-        public string SearchText { get; set; } = string.Empty;
+        private string _searchText = string.Empty;
+
+        private Supplier? _selectedSupplier;   
+        private Category? _selectedCategory;
 
         public ICommand AddCommand { get; }
         public ICommand LoadCommand { get; }
         public ICommand SearchCommand { get; }
         public ICommand EditCommand { get; }
+        public ICommand ClearFiltersCommand { get; }
+
 
         public ProductViewModel()
         {
@@ -34,11 +39,85 @@ namespace InventoryApp.ViewModels
             LoadSuppliers();
             LoadCategories();
             LoadCommand = new RelayCommand(LoadProducts);
-            SearchCommand = new RelayCommand(SearchProducts);
+            SearchCommand = new RelayCommand(ApplyFilters);
             AddCommand = new RelayCommand(AddProduct);
             EditCommand = new RelayCommand(EditProduct);
+            ClearFiltersCommand = new RelayCommand(ClearFilters);
+
 
             LoadProducts();
+        }
+
+      
+        public Supplier? SelectedSupplier
+        {
+            get => _selectedSupplier;
+            set
+            {
+                _selectedSupplier = value;
+                OnPropertyChanged();
+                ApplyFilters();
+            }
+        }
+
+    
+        public Category? SelectedCategory
+        {
+            get => _selectedCategory;
+            set
+            {
+                _selectedCategory = value;
+                OnPropertyChanged();
+                ApplyFilters();
+            }
+        }
+
+        private void ApplyFilters()
+        {
+            var query = _context.Products
+                .Include(p => p.Supplier)
+                .Include(p => p.ProductCategories)
+                    .ThenInclude(pc => pc.Category)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(SearchText))
+            {
+                var lowerSearch = SearchText.ToLower();
+                query = query.Where(p => p.Name.ToLower().Contains(lowerSearch));
+            }
+
+            if (SelectedSupplier != null && SelectedSupplier.Id != 0)
+            {
+                query = query.Where(p => p.SupplierId == SelectedSupplier.Id);
+            }
+
+            if (SelectedCategory != null && SelectedCategory.Id != 0)
+            {
+                query = query.Where(p =>
+                    p.ProductCategories.Any(pc => pc.CategoryId == SelectedCategory.Id));
+            }
+
+            Products.Clear();
+            foreach (var product in query.ToList())
+                Products.Add(product);
+        }
+
+        private void ClearFilters()
+        {
+            SearchText = string.Empty;
+            SelectedSupplier = Suppliers.FirstOrDefault();   
+            SelectedCategory = Categories.FirstOrDefault();   
+            ApplyFilters();
+        }
+
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                _searchText = value;
+                OnPropertyChanged();
+            }
         }
 
         private void AddProduct()
@@ -113,35 +192,29 @@ namespace InventoryApp.ViewModels
             }
         }
 
-        private void SearchProducts()
-        {
-            Products.Clear();
-            var filtered = _context.Products
-                .Include(p => p.Supplier)
-                .Include(p => p.ProductCategories)
-                    .ThenInclude(pc => pc.Category)
-                .Where(p => p.Name.Contains(SearchText))
-                .ToList();
-
-            foreach (var product in filtered)
-                Products.Add(product);
-        }
+      
 
         private void LoadSuppliers()
         {
             Suppliers.Clear();
+            Suppliers.Add(new Supplier { Id = 0, Name = "Всички доставчици" });
             var list = _context.Suppliers.ToList();
             foreach (var supplier in list)
                 Suppliers.Add(supplier);
+            SelectedSupplier = Suppliers.FirstOrDefault();
         }
 
         private void LoadCategories()
         {
             Categories.Clear();
+            Categories.Add(new Category { Id = 0, Name = "Всички категории" });
             var list = _context.Categories.ToList();
             foreach (var category in list)
                 Categories.Add(category);
+            SelectedCategory = Categories.FirstOrDefault();
         }
+
+   
 
         private void LoadProducts()
         {
