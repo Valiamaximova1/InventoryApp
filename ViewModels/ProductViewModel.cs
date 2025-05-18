@@ -222,16 +222,7 @@ namespace InventoryApp.ViewModels
             }
         }
 
-        //public bool CanEdit
-        //{
-        //    get => _canEdit;
-        //    set
-        //    {
-        //        _canEdit = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
-
+    
       
 
         private void LoadSuppliers()
