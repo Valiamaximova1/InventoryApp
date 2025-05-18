@@ -41,7 +41,7 @@
                                             <TextBlock Grid.Column="1" Margin="30,0"
                                                        Text="{Binding Quantity}" />
                                             <TextBlock Grid.Column="2"
-                                                       Text="{Binding Product.Price, StringFormat=F2}" />
+                                                       Text="{Binding Product.Price, StringFormat={}{0:F2}}" />
                                            
                                         </Grid>
                                     </DataTemplate>

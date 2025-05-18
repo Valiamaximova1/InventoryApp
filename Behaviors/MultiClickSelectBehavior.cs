@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Media3D;
 
 namespace InventoryApp.Behaviors
 {
@@ -45,11 +46,23 @@ namespace InventoryApp.Behaviors
             e.Handled = true;
         }
 
-        private static T? VisualUpwardSearch<T>(DependencyObject source) where T : DependencyObject
+        private static T? VisualUpwardSearch<T>(DependencyObject current) where T : DependencyObject
         {
-            while (source != null && source is not T)
-                source = VisualTreeHelper.GetParent(source);
-            return source as T;
+            while (current != null)
+            {
+                if (current is T target)
+                    return target;
+
+                if (current is not Visual && current is not Visual3D)
+                    return null;
+
+                current = VisualTreeHelper.GetParent(current);
+            }
+
+            return null;
+            //while (source != null && source is not T)
+            //    source = VisualTreeHelper.GetParent(source);
+            //return source as T;
         }
     }
 }

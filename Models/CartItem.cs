@@ -23,8 +23,11 @@ namespace InventoryApp.Models
                 _quantity = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(TotalPrice));
+                OnPropertyChanged(nameof(RemainingQuantity));
             }
         }
+
+        public int RemainingQuantity => Product.Quantity - Quantity;
 
         public decimal TotalPrice { 
             get =>  Product != null ? Product.Price * Quantity  : 0;

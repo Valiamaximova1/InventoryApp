@@ -19,7 +19,7 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Продукт" DisplayMemberBinding="{Binding Product.Name}" />
-                    <GridViewColumn Header="Цена" DisplayMemberBinding="{Binding Product.Price}" />
+                    <GridViewColumn Header="Цена" DisplayMemberBinding="{Binding Product.Price, StringFormat={}{0:F2}}" />
                     <GridViewColumn Header="Количество">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -31,7 +31,8 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Общо" DisplayMemberBinding="{Binding TotalPrice}" />
+                    <GridViewColumn Header="Налични" DisplayMemberBinding="{Binding RemainingQuantity}" />
+                    <GridViewColumn Header="Общо" DisplayMemberBinding="{Binding TotalPrice, StringFormat={}{0:F2}}" />
                     <GridViewColumn Header="Действие">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -55,7 +56,7 @@
                 <TextBlock  Grid.Row="0"  Text="Общо количество:" FontWeight="Bold" Margin="0 0 10 0"/>
                 <TextBlock  Grid.Row="1"  Text="{Binding TotalQuantity}" Margin="5"/>
             <TextBlock Grid.Row="2" Text="Обща сума:" FontWeight="Bold"  Margin="0 0 10 0"/>
-            <TextBlock Grid.Row="3" Text="{Binding TotalPrice}"  Margin="5" />
+            <TextBlock Grid.Row="3" Text="{Binding TotalPrice, StringFormat={}{0:F2}}"  Margin="5" />
                    
             </Grid>
            

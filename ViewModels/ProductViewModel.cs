@@ -15,7 +15,7 @@ namespace InventoryApp.ViewModels
     {
         private readonly AppDbContext _context;
         private Product _selectedProduct;
-
+         private string _quantitySortOrder = "Без сортиране";
 
       
 
@@ -148,6 +148,17 @@ namespace InventoryApp.ViewModels
                     p.ProductCategories.Any(pc => pc.CategoryId == SelectedCategory.Id));
             }
 
+            switch (QuantitySortOrder)
+            {
+                case "Възходящ":
+                    query = query.OrderBy(p => p.Quantity);
+                    break;
+                case "Низходящ":
+                    query = query.OrderByDescending(p => p.Quantity);
+                    break;
+            }
+
+
             Products.Clear();
             foreach (var product in query.ToList())
                 Products.Add(product);
@@ -157,7 +168,8 @@ namespace InventoryApp.ViewModels
         {
             SearchText = string.Empty;
             SelectedSupplier = Suppliers.FirstOrDefault();   
-            SelectedCategory = Categories.FirstOrDefault();   
+            SelectedCategory = Categories.FirstOrDefault();
+            QuantitySortOrder = "Без сортиране";
             ApplyFilters();
         }
 
@@ -291,6 +303,25 @@ namespace InventoryApp.ViewModels
                 Products.Add(product);
             OnPropertyChanged(nameof(Products));
         }
+
+      
+        public string QuantitySortOrder
+        {
+            get => _quantitySortOrder;
+            set
+            {
+                _quantitySortOrder = value;
+                OnPropertyChanged();
+                ApplyFilters();
+            }
+        }
+
+        public List<string> QuantitySortOptions { get; } = new()
+        {
+            "Без сортиране",
+            "Възходящ",
+            "Низходящ"
+        };
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null) =>

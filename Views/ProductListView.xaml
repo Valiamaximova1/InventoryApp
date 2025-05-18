@@ -43,6 +43,10 @@ xmlns:converters="clr-namespace:InventoryApp.Converters"
             <ComboBox Width="150" Margin="5"
                       ItemsSource="{Binding Suppliers}" DisplayMemberPath="Name"
                       SelectedItem="{Binding SelectedSupplier}" />
+            <ComboBox Width="150" Margin="5"
+                      SelectedItem="{Binding QuantitySortOrder}"
+                      ItemsSource="{Binding QuantitySortOptions}" />
+
             <Button Content="Изчисти филтрите" Margin="5"  Command="{Binding ClearFiltersCommand}"/>
 
             <Button Content="Добави" Margin="5" Command="{Binding AddCommand}" />
@@ -95,13 +99,28 @@ xmlns:converters="clr-namespace:InventoryApp.Converters"
                             </Border.Background>
 
                             <StackPanel>
-                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14"/>
-                                    <TextBlock Text="Цена:"/>
-                                    <TextBlock Text="{Binding Price}" />
-                                    <TextBlock Text="Количество:"/>
-                                    <TextBlock Text="{Binding Quantity}" />
-                                    <TextBlock Text="Доставчик:"/>
-                                    <TextBlock Text="{Binding Supplier.Name}" />
+
+                                <TextBlock FontSize="16" FontWeight="Bold" >
+                                     <Run Text="Име:"/>
+                                     <Run Text="{Binding Name}" />
+                                </TextBlock>
+
+
+                                <TextBlock FontSize="14" >
+                                     <Run Text="Цена:"/>
+                                     <Run Text="{Binding Price, StringFormat={}{0:F2}}" />
+                                </TextBlock>
+
+                                <TextBlock FontSize="14" >
+                                    <Run Text="Количество:"/>
+                                    <Run Text="{Binding Quantity}" />
+                                </TextBlock>
+
+                                <TextBlock FontSize="14">
+                                   <Run Text="Доставчик:"/>
+                                   <Run Text="{Binding Supplier.Name}" />
+                                </TextBlock>
+                                <TextBlock  Text="Категории:" FontSize="14"/>
                                     <ItemsControl ItemsSource="{Binding ProductCategories}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>

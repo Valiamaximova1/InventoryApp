@@ -4,7 +4,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:InventoryApp.Behaviors"
 
-        Title="Добави продукт" Height="400" Width="400">
+        Title="Продукт" Height="400" Width="400">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -28,7 +28,7 @@
         <TextBox Grid.Row="0" Margin="100,0,0,5" Text="{Binding Name}" />
 
         <TextBlock Text="Цена:" Grid.Row="1" VerticalAlignment="Center"/>
-        <TextBox Grid.Row="1" Margin="100,0,0,5" Text="{Binding Price}" />
+        <TextBox Grid.Row="1" Margin="100,0,0,5" Text="{Binding Price, StringFormat={}{0:F2}}" />
 
         <TextBlock Text="Количество:" Grid.Row="2" VerticalAlignment="Center"/>
         <TextBox Grid.Row="2" Margin="100,0,0,5" Text="{Binding Quantity}" />

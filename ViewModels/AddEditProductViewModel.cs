@@ -38,15 +38,7 @@ namespace InventoryApp.ViewModels
             //Categories = new ObservableCollection<Category>(context.Categories.ToList());
             SelectedCategories = new ObservableCollection<Category>();
 
-            if (Product.ProductCategories != null)
-            {
-                var selectedIds = Product.ProductCategories.Select(pc => pc.CategoryId).ToHashSet();
-
-                foreach (var category in Categories)
-                {
-                    if (selectedIds.Contains(category.Id))
-                        SelectedCategories.Add(category);   }
-            }
+           
 
             Suppliers = new ObservableCollection<Supplier>(context.Suppliers.ToList());
 
@@ -64,6 +56,16 @@ namespace InventoryApp.ViewModels
             _window = Application.Current.Windows
                 .OfType<Window>()
                 .FirstOrDefault(w => w.DataContext == this);
+            if (Product.ProductCategories != null)
+            {
+                var selectedIds = Product.ProductCategories.Select(pc => pc.CategoryId).ToHashSet();
+
+                foreach (var category in Categories)
+                {
+                    if (selectedIds.Contains(category.Id))
+                        SelectedCategories.Add(category);
+                }
+            }
         }
 
         private void Save()
@@ -101,7 +103,6 @@ namespace InventoryApp.ViewModels
                 MessageBox.Show("Моля, избери поне една категория.", "Грешка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            // Изчистваме старите категории и задаваме само новите
             Product.ProductCategories = SelectedCategories
                 .Select(c => new ProductCategory
                 {
