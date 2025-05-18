@@ -4,9 +4,23 @@
              xmlns:vm="clr-namespace:InventoryApp.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+            xmlns:behaviors="clr-namespace:InventoryApp.Behaviors"
+             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             
+           
+
+xmlns:converters="clr-namespace:InventoryApp.Converters"
 
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="1000" >
+    
+    <UserControl.Resources>
+    <converters:BoolToBrushConverter x:Key="BoolToBrushConverter"
+                                     TrueBrush="LightSkyBlue"
+                                     FalseBrush="White"/>
+</UserControl.Resources>
+
 
     <UserControl.DataContext>
         <vm:ProductViewModel />
@@ -28,53 +42,79 @@
             <ComboBox Width="150" Margin="5"
                       ItemsSource="{Binding Suppliers}" DisplayMemberPath="Name"
                       SelectedItem="{Binding SelectedSupplier}" />
-            <Button Content="Изчисти филтрите" Command="{Binding ClearFiltersCommand}" Margin="5 0 0 0" />
+            <Button Content="Изчисти филтрите" Margin="5"  Command="{Binding ClearFiltersCommand}"/>
 
             <Button Content="Добави" Margin="5" Command="{Binding AddCommand}" />
-            <Button Content="Редактирай" Margin="5" Command="{Binding EditCommand}"  />
-            <Button Content="Изтрий" Margin="5" Command="{Binding DeleteCommand}" />
+            <Button Content="Редактирай" Margin="5" Command="{Binding EditCommand}"
+                      IsEnabled="{Binding CanEdit}"/>
+            <Button Content="Изтрий" Margin="5" Command="{Binding DeleteCommand}"  
+                    IsEnabled="{Binding CanDelete}"  />
         </StackPanel>
 
         <ScrollViewer VerticalScrollBarVisibility="Auto">
             <ListBox ItemsSource="{Binding Products}"
-         SelectedItem="{Binding SelectedProduct, Mode=TwoWay}"
+         SelectionMode="Extended"
          Background="Transparent"
          BorderThickness="0"
-         Margin="10">
+         Margin="10"
+         HorizontalContentAlignment="Stretch">
+                <i:Interaction.Behaviors>
+                    <behaviors:SelectedItemsBehavior SelectedItems="{Binding SelectedProducts}" />
+                   
+                    <behaviors:MultiClickSelectBehavior />
+                </i:Interaction.Behaviors>
+                
+            
 
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel />
+                        <UniformGrid Columns="3" />
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
+                
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Padding" Value="0"/>
+                        <Setter Property="Margin" Value="5"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+
 
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Border BorderBrush="Gray" BorderThickness="1" Padding="10" Margin="5" Width="220">
-                            <StackPanel>
-                                <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14"/>
-                                <TextBlock Text="Цена:"/>
-                                <TextBlock Text="{Binding Price}"/>
-                                <TextBlock Text="Количество:"/>
-                                <TextBlock Text="{Binding Quantity}"/>
-                                <TextBlock Text="Доставчик:"/>
-                                <TextBlock Text="{Binding Supplier.Name}"/>
-                                <ItemsControl ItemsSource="{Binding ProductCategories}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock>
-                                                 <Run Text="• " />
-                                                <Run Text="{Binding Category.Name}" />
-                                            </TextBlock>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-
-                                <Button Content="Добави в количка" Margin="5"/>
-                            </StackPanel>
-                        </Border>
+                        <Grid>
+                            <Border BorderBrush="Gray"
+                    BorderThickness="1"
+                    Padding="10"
+                    Background="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected, Converter={StaticResource BoolToBrushConverter}}">
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14"/>
+                                    <TextBlock Text="Цена:"/>
+                                    <TextBlock Text="{Binding Price}" />
+                                    <TextBlock Text="Количество:"/>
+                                    <TextBlock Text="{Binding Quantity}" />
+                                    <TextBlock Text="Доставчик:"/>
+                                    <TextBlock Text="{Binding Supplier.Name}" />
+                                    <ItemsControl ItemsSource="{Binding ProductCategories}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock>
+                                    <Run Text="• " />
+                                    <Run Text="{Binding Category.Name}" />
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <Button Content="Добави в количка" Margin="5"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
+
             </ListBox>
 
         </ScrollViewer>

@@ -12,6 +12,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
+
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -44,7 +45,7 @@
          DisplayMemberPath="Name"
          SelectionMode="Multiple">
             <i:Interaction.Behaviors>
-                <local:SelectedItemsBehavior SelectedItems="{Binding SelectedCategories}" />
+                <local:SelectedItemsBehaviorListBox SelectedListItems="{Binding SelectedCategories}" />
             </i:Interaction.Behaviors>
         </ListBox>
 

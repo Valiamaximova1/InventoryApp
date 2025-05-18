@@ -15,11 +15,17 @@ namespace InventoryApp.ViewModels
     {
         private readonly AppDbContext _context;
         private Product _selectedProduct;
-        private bool _canEdit;
+
+        //private bool _canEdit;
+
+        public bool CanEdit => SelectedProducts.Count == 1;
+        public bool CanDelete => SelectedProducts.Count > 0;
+
 
         public ObservableCollection<Product> Products { get; set; } = new ObservableCollection<Product>();
         public ObservableCollection<Supplier> Suppliers { get; set; } = new();
         public ObservableCollection<Category> Categories { get; set; } = new();
+        private ObservableCollection<Product> _selectedProducts = new();
 
         private string _searchText = string.Empty;
 
@@ -30,6 +36,7 @@ namespace InventoryApp.ViewModels
         public ICommand LoadCommand { get; }
         public ICommand SearchCommand { get; }
         public ICommand EditCommand { get; }
+        public ICommand DeleteCommand { get; }
         public ICommand ClearFiltersCommand { get; }
 
 
@@ -38,17 +45,49 @@ namespace InventoryApp.ViewModels
             _context = new AppDbContext();
             LoadSuppliers();
             LoadCategories();
+            LoadProducts();
+
+            SelectedProducts.CollectionChanged += SelectedProductsChanged;
+
             LoadCommand = new RelayCommand(LoadProducts);
             SearchCommand = new RelayCommand(ApplyFilters);
             AddCommand = new RelayCommand(AddProduct);
             EditCommand = new RelayCommand(EditProduct);
+            DeleteCommand = new RelayCommand(DeleteSelectedProducts, () => SelectedProducts.Any());
             ClearFiltersCommand = new RelayCommand(ClearFilters);
 
-
-            LoadProducts();
+          
         }
 
-      
+        public ObservableCollection<Product> SelectedProducts
+        {
+            get => _selectedProducts;
+            set
+            {
+                if (_selectedProducts != null)
+                    _selectedProducts.CollectionChanged -= SelectedProductsChanged;
+
+                _selectedProducts = value;
+
+                if (_selectedProducts != null)
+                    _selectedProducts.CollectionChanged += SelectedProductsChanged;
+
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CanEdit));
+                OnPropertyChanged(nameof(CanDelete));
+            }
+        }
+        private void SelectedProductsChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(CanEdit));
+            OnPropertyChanged(nameof(CanDelete));
+
+            if (SelectedProducts.Count == 1)
+                SelectedProduct = SelectedProducts.First();
+            else
+                SelectedProduct = null;
+        }
+
         public Supplier? SelectedSupplier
         {
             get => _selectedSupplier;
@@ -169,6 +208,7 @@ namespace InventoryApp.ViewModels
                 _context.Products.Update(SelectedProduct);
                 _context.SaveChanges();
                 LoadProducts();
+                SelectedProduct = Products.FirstOrDefault(p => p.Id == editableProduct.Id);
             }
         }
 
@@ -182,15 +222,15 @@ namespace InventoryApp.ViewModels
             }
         }
 
-        public bool CanEdit
-        {
-            get => _canEdit;
-            set
-            {
-                _canEdit = value;
-                OnPropertyChanged();
-            }
-        }
+        //public bool CanEdit
+        //{
+        //    get => _canEdit;
+        //    set
+        //    {
+        //        _canEdit = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
 
       
 
@@ -214,7 +254,26 @@ namespace InventoryApp.ViewModels
             SelectedCategory = Categories.FirstOrDefault();
         }
 
-   
+        private void DeleteSelectedProducts()
+        {
+            if (!SelectedProducts.Any()) return;
+
+            string productNames = string.Join(", ", SelectedProducts.Select(p => p.Name));
+            var result = MessageBox.Show(
+                $"Сигурни ли сте, че искате да изтриете следните продукти:\n{productNames}?",
+                "Потвърждение за изтриване",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                _context.Products.RemoveRange(SelectedProducts);
+                _context.SaveChanges();
+                LoadProducts();
+                SelectedProducts.Clear();
+            }
+        }
+
 
         private void LoadProducts()
         {
@@ -227,6 +286,7 @@ namespace InventoryApp.ViewModels
 
             foreach (var product in items)
                 Products.Add(product);
+            OnPropertyChanged(nameof(Products));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

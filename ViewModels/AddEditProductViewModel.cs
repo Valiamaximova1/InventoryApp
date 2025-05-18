@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Input;
 using InventoryApp.Data;
 using InventoryApp.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace InventoryApp.ViewModels
 {
@@ -34,7 +35,7 @@ namespace InventoryApp.ViewModels
             var allCategories = context.Categories.ToList();
             Categories = new ObservableCollection<Category>(allCategories);
 
-            Categories = new ObservableCollection<Category>(context.Categories.ToList());
+            //Categories = new ObservableCollection<Category>(context.Categories.ToList());
             SelectedCategories = new ObservableCollection<Category>();
 
             if (Product.ProductCategories != null)
@@ -67,6 +68,9 @@ namespace InventoryApp.ViewModels
 
         private void Save()
         {
+        
+
+
             if (string.IsNullOrWhiteSpace(Name))
             {
                 MessageBox.Show("Моля, въведи име на продукта.");
@@ -97,14 +101,17 @@ namespace InventoryApp.ViewModels
                 MessageBox.Show("Моля, избери поне една категория.", "Грешка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-
+            // Изчистваме старите категории и задаваме само новите
             Product.ProductCategories = SelectedCategories
-                .Select(c => new ProductCategory { CategoryId = c.Id, ProductId = Product.Id })
-                .ToList();
-
+                .Select(c => new ProductCategory
+                {
+                    CategoryId = c.Id,
+                    ProductId = Product.Id
+                }).ToList();
 
             _window.DialogResult = true;
             _window.Close();
+
         }
 
 
