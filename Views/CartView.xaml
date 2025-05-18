@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="InventoryApp.Views.CartView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:InventoryApp.ViewModels"
+             mc:Ignorable="d"
+             d:DesignHeight="400" d:DesignWidth="600">
+
+    <UserControl.DataContext>
+        <vm:CartViewModel />
+    </UserControl.DataContext>
+
+    <DockPanel Margin="10">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 0 10">
+            <Button Content="Изчисти количката" Command="{Binding ClearCartCommand}" Margin="5"/>
+        </StackPanel>
+
+        <ListView ItemsSource="{Binding CartItems}" Margin="0 0 0 10">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Продукт" DisplayMemberBinding="{Binding Product.Name}" />
+                    <GridViewColumn Header="Цена" DisplayMemberBinding="{Binding Product.Price}" />
+                    <GridViewColumn Header="Количество">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" Width="50" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Общо" DisplayMemberBinding="{Binding TotalPrice}" />
+                    <GridViewColumn Header="Действие">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Премахни" Command="{Binding DataContext.RemoveItemCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <TextBlock Text="Общо количество:" FontWeight="Bold" Margin="0 0 10 0"/>
+            <TextBlock Text="{Binding TotalQuantity}" Margin="0 20 0 0"/>
+            <TextBlock Text="Обща сума:" FontWeight="Bold" Margin="20 0 10 0"/>
+            <TextBlock Text="{Binding TotalPrice}" />
+        </StackPanel>
+    </DockPanel>
+</UserControl>

@@ -17,19 +17,33 @@ namespace InventoryApp.ViewModels
 
         public ICommand ShowProductsCommand { get; }
         public ICommand ShowCategoriesCommand { get; }
-
+        public ICommand ShowSupplierCommand { get; }
+        public ICommand ShowCartCommand { get; }
         public MainWindowViewModel()
         {
             ShowProductsCommand = new RelayCommand( ShowProducts);
             ShowCategoriesCommand = new RelayCommand(ShowCategories);
+            ShowSupplierCommand = new RelayCommand(ShowSupplier);
+            ShowCartCommand = new RelayCommand(ShowCart);
 
-            ShowProducts(); // Начален изглед
+            ShowProducts(); 
         }
 
         private void ShowProducts()
         {
             CurrentView = new ProductListView();
         }
+
+        private void ShowSupplier()
+        {
+            CurrentView = new SupplierListView();
+        }
+
+        private void ShowCart()
+        {
+            CurrentView = new CartView();
+        }
+        
 
         private void ShowCategories()
         {

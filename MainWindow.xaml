@@ -37,8 +37,8 @@
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Background="LightGray" Height="40">
             <Button Content="Продукти" Width="100" Margin="5" Command="{Binding ShowProductsCommand}" />
             <Button Content="Категории" Width="100" Margin="5" Command="{Binding ShowCategoriesCommand}" />
-            <Button Content="Доставчици" Width="100" Margin="5" Command="{Binding ShowCategoriesCommand}" />
-            <Button Content="Количка" Width="100" Margin="5" Command="{Binding ShowCategoriesCommand}" />
+            <Button Content="Доставчици" Width="100" Margin="5" Command="{Binding ShowSupplierCommand}" />
+            <Button Content="Количка" Width="100" Margin="5" Command="{Binding ShowCartCommand}" />
             <Button Content="История на поръчки" Width="150" Margin="5" Command="{Binding ShowCategoriesCommand}" />
         </StackPanel>
 

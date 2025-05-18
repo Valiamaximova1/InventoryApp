@@ -16,11 +16,8 @@ namespace InventoryApp.ViewModels
         private readonly AppDbContext _context;
         private Product _selectedProduct;
 
-        //private bool _canEdit;
 
-        public bool CanEdit => SelectedProducts.Count == 1;
-        public bool CanDelete => SelectedProducts.Count > 0;
-
+      
 
         public ObservableCollection<Product> Products { get; set; } = new ObservableCollection<Product>();
         public ObservableCollection<Supplier> Suppliers { get; set; } = new();
@@ -38,6 +35,7 @@ namespace InventoryApp.ViewModels
         public ICommand EditCommand { get; }
         public ICommand DeleteCommand { get; }
         public ICommand ClearFiltersCommand { get; }
+        public ICommand AddToCartCommand { get; }
 
 
         public ProductViewModel()
@@ -55,8 +53,9 @@ namespace InventoryApp.ViewModels
             EditCommand = new RelayCommand(EditProduct);
             DeleteCommand = new RelayCommand(DeleteSelectedProducts, () => SelectedProducts.Any());
             ClearFiltersCommand = new RelayCommand(ClearFilters);
+            AddToCartCommand = new RelayCommand<Product>(AddToCart);
 
-          
+
         }
 
         public ObservableCollection<Product> SelectedProducts
@@ -76,11 +75,15 @@ namespace InventoryApp.ViewModels
                 OnPropertyChanged(nameof(CanEdit));
                 OnPropertyChanged(nameof(CanDelete));
             }
-        }
+        } 
+        public bool CanEdit => SelectedProducts.Count == 1;
+        public bool CanDelete => SelectedProducts.Count > 0;
+
         private void SelectedProductsChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             OnPropertyChanged(nameof(CanEdit));
             OnPropertyChanged(nameof(CanDelete));
+            (DeleteCommand as RelayCommand)?.RaiseCanExecuteChanged();
 
             if (SelectedProducts.Count == 1)
                 SelectedProduct = SelectedProducts.First();
@@ -99,7 +102,12 @@ namespace InventoryApp.ViewModels
             }
         }
 
-    
+        private void AddToCart(Product product)
+        {
+            if (product == null) return;
+
+            CartViewModel.Instance.AddOrUpdateItem(product);
+        }
         public Category? SelectedCategory
         {
             get => _selectedCategory;

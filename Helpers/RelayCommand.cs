@@ -1,4 +1,8 @@
-﻿using System;
+﻿using InventoryApp.Models;
+using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
 public class RelayCommand : ICommand
@@ -19,3 +23,5 @@ public class RelayCommand : ICommand
     public event EventHandler? CanExecuteChanged;
     public void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
 }
+
+

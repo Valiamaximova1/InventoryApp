@@ -4,9 +4,8 @@
              xmlns:vm="clr-namespace:InventoryApp.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-            xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
             xmlns:behaviors="clr-namespace:InventoryApp.Behaviors"
-             xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              
            
 
@@ -14,12 +13,14 @@ xmlns:converters="clr-namespace:InventoryApp.Converters"
 
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="1000" >
-    
+
     <UserControl.Resources>
-    <converters:BoolToBrushConverter x:Key="BoolToBrushConverter"
-                                     TrueBrush="LightSkyBlue"
-                                     FalseBrush="White"/>
-</UserControl.Resources>
+        <converters:QuantityAndSelectionToBrushConverter x:Key="QuantityAndSelectionToBrushConverter"
+                                                  LowQuantityBrush="Salmon"
+                                                  MediumQuantityBrush="LightGoldenrodYellow"
+                                                  NormalBrush="White"
+                                                  SelectedBrush="LightSkyBlue"/>
+    </UserControl.Resources>
 
 
     <UserControl.DataContext>
@@ -60,18 +61,18 @@ xmlns:converters="clr-namespace:InventoryApp.Converters"
          HorizontalContentAlignment="Stretch">
                 <i:Interaction.Behaviors>
                     <behaviors:SelectedItemsBehavior SelectedItems="{Binding SelectedProducts}" />
-                   
                     <behaviors:MultiClickSelectBehavior />
+
                 </i:Interaction.Behaviors>
-                
-            
+
+
 
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <UniformGrid Columns="3" />
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
-                
+
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
                         <Setter Property="Padding" Value="0"/>
@@ -85,12 +86,15 @@ xmlns:converters="clr-namespace:InventoryApp.Converters"
 
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid>
-                            <Border BorderBrush="Gray"
-                    BorderThickness="1"
-                    Padding="10"
-                    Background="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected, Converter={StaticResource BoolToBrushConverter}}">
-                                <StackPanel>
+                        <Border BorderBrush="Gray" BorderThickness="1" Padding="10">
+                            <Border.Background>
+                                <MultiBinding Converter="{StaticResource QuantityAndSelectionToBrushConverter}">
+                                    <Binding Path="Quantity" />
+                                    <Binding RelativeSource="{RelativeSource AncestorType=ListBoxItem}" Path="IsSelected" />
+                                </MultiBinding>
+                            </Border.Background>
+
+                            <StackPanel>
                                     <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14"/>
                                     <TextBlock Text="Цена:"/>
                                     <TextBlock Text="{Binding Price}" />
@@ -108,10 +112,13 @@ xmlns:converters="clr-namespace:InventoryApp.Converters"
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
-                                    <Button Content="Добави в количка" Margin="5"/>
-                                </StackPanel>
-                            </Border>
-                        </Grid>
+                                <Button Content="Добави в количка"
+                                    Command="{Binding DataContext.AddToCartCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}" 
+                                    Margin="5"/>
+                            </StackPanel>
+                            
+                        </Border>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
 
