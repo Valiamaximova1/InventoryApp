@@ -7,13 +7,12 @@
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="600">
 
-    <UserControl.DataContext>
-        <vm:CartViewModel />
-    </UserControl.DataContext>
 
     <DockPanel Margin="10">
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0 0 0 10">
             <Button Content="Изчисти количката" Command="{Binding ClearCartCommand}" Margin="5"/>
+            <Button Content="Поръчай" Command="{Binding CheckoutCommand}" Margin="5"/>
+
         </StackPanel>
 
         <ListView ItemsSource="{Binding CartItems}" Margin="0 0 0 10">
@@ -24,7 +23,11 @@
                     <GridViewColumn Header="Количество">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBox Text="{Binding Quantity, UpdateSourceTrigger=PropertyChanged}" Width="50" />
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="-" Width="20" Command="{Binding DataContext.DecreaseQuantityCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" />
+                                    <TextBlock Text="{Binding Quantity}" Width="30" TextAlignment="Center"/>
+                                    <Button Content="+" Width="20" Command="{Binding DataContext.IncreaseQuantityCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" />
+                                </StackPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
@@ -40,11 +43,22 @@
             </ListView.View>
         </ListView>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <TextBlock Text="Общо количество:" FontWeight="Bold" Margin="0 0 10 0"/>
-            <TextBlock Text="{Binding TotalQuantity}" Margin="0 20 0 0"/>
-            <TextBlock Text="Обща сума:" FontWeight="Bold" Margin="20 0 10 0"/>
-            <TextBlock Text="{Binding TotalPrice}" />
-        </StackPanel>
+     
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>  
+              
+                <TextBlock  Grid.Row="0"  Text="Общо количество:" FontWeight="Bold" Margin="0 0 10 0"/>
+                <TextBlock  Grid.Row="1"  Text="{Binding TotalQuantity}" Margin="5"/>
+            <TextBlock Grid.Row="2" Text="Обща сума:" FontWeight="Bold"  Margin="0 0 10 0"/>
+            <TextBlock Grid.Row="3" Text="{Binding TotalPrice}"  Margin="5" />
+                   
+            </Grid>
+           
+    
     </DockPanel>
 </UserControl>

@@ -104,7 +104,11 @@ namespace InventoryApp.ViewModels
 
         private void AddToCart(Product product)
         {
-            if (product == null) return;
+            if (product.Quantity <= 0)
+            {
+                MessageBox.Show("Продуктът е изчерпан!", "Няма наличност", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
             CartViewModel.Instance.AddOrUpdateItem(product);
         }

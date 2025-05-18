@@ -19,12 +19,14 @@ namespace InventoryApp.ViewModels
         public ICommand ShowCategoriesCommand { get; }
         public ICommand ShowSupplierCommand { get; }
         public ICommand ShowCartCommand { get; }
+        public ICommand SalesListCommand { get; }
         public MainWindowViewModel()
         {
             ShowProductsCommand = new RelayCommand( ShowProducts);
             ShowCategoriesCommand = new RelayCommand(ShowCategories);
             ShowSupplierCommand = new RelayCommand(ShowSupplier);
             ShowCartCommand = new RelayCommand(ShowCart);
+            SalesListCommand = new RelayCommand(AllSales);
 
             ShowProducts(); 
         }
@@ -43,7 +45,10 @@ namespace InventoryApp.ViewModels
         {
             CurrentView = new CartView();
         }
-        
+        private void AllSales()
+        {
+            CurrentView = new SalesListView();
+        }
 
         private void ShowCategories()
         {

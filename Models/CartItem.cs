@@ -1,6 +1,7 @@
 ﻿using InventoryApp.Models;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace InventoryApp.Models
 {
@@ -14,12 +15,14 @@ namespace InventoryApp.Models
             get => _quantity;
             set
             {
-                if (_quantity != value && value > 0)
+                if (value > Product.Quantity)
                 {
-                    _quantity = value;
-                    OnPropertyChanged();
-                    OnPropertyChanged(nameof(TotalPrice));
+                    MessageBox.Show($"Налично количество: {Product.Quantity}", "Недостатъчна наличност", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
                 }
+                _quantity = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(TotalPrice));
             }
         }
 

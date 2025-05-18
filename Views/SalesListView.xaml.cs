@@ -1,5 +1,4 @@
-﻿using InventoryApp.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,14 +16,13 @@ using System.Windows.Shapes;
 namespace InventoryApp.Views
 {
     /// <summary>
-    /// Interaction logic for CartView.xaml
+    /// Interaction logic for SalesListView.xaml
     /// </summary>
-    public partial class CartView : UserControl
+    public partial class SalesListView : UserControl
     {
-        public CartView()
+        public SalesListView()
         {
             InitializeComponent();
-            DataContext = CartViewModel.Instance;
         }
     }
 }

@@ -22,6 +22,11 @@ namespace InventoryApp.Behaviors
 
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            if (e.OriginalSource is FrameworkElement fe &&
+        (fe is Button || VisualUpwardSearch<Button>(fe) != null))
+                return;
+
+
             var listBox = AssociatedObject;
             var item = VisualUpwardSearch<ListBoxItem>((DependencyObject)e.OriginalSource);
             if (item == null) return;

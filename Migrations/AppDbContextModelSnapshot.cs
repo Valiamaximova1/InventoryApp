@@ -108,9 +108,6 @@ namespace InventoryApp.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(65,30)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Sales");
@@ -144,32 +141,40 @@ namespace InventoryApp.Migrations
 
             modelBuilder.Entity("InventoryApp.Models.ProductCategory", b =>
                 {
-                    b.HasOne("InventoryApp.Models.Category", null)
+                    b.HasOne("InventoryApp.Models.Category", "Category")
                         .WithMany("ProductCategories")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("InventoryApp.Models.Product", null)
+                    b.HasOne("InventoryApp.Models.Product", "Product")
                         .WithMany("ProductCategories")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("InventoryApp.Models.ProductSale", b =>
                 {
-                    b.HasOne("InventoryApp.Models.Product", null)
+                    b.HasOne("InventoryApp.Models.Product", "Product")
                         .WithMany("ProductSales")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("InventoryApp.Models.Sale", null)
+                    b.HasOne("InventoryApp.Models.Sale", "Sale")
                         .WithMany("ProductSales")
                         .HasForeignKey("SaleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Sale");
                 });
 
             modelBuilder.Entity("InventoryApp.Models.Category", b =>

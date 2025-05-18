@@ -19,14 +19,10 @@ using System.Windows.Input;
 
         public bool CanExecute(object? parameter) =>
             _canExecute == null || (parameter is T t && _canExecute(t));
+        public void Execute(object? parameter) => _execute((T)parameter!);
 
-        public void Execute(object? parameter)
-        {
-            if (parameter is T t)
-                _execute(t);
-        }
 
-        public event EventHandler? CanExecuteChanged;
+    public event EventHandler? CanExecuteChanged;
         public void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
 

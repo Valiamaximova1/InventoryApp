@@ -39,10 +39,9 @@
             <Button Content="Категории" Width="100" Margin="5" Command="{Binding ShowCategoriesCommand}" />
             <Button Content="Доставчици" Width="100" Margin="5" Command="{Binding ShowSupplierCommand}" />
             <Button Content="Количка" Width="100" Margin="5" Command="{Binding ShowCartCommand}" />
-            <Button Content="История на поръчки" Width="150" Margin="5" Command="{Binding ShowCategoriesCommand}" />
+            <Button Content="История на поръчки" Width="150" Margin="5" Command="{Binding SalesListCommand}" />
         </StackPanel>
 
-        <!--<views:ProductListView />-->
 
         <ContentControl Content="{Binding CurrentView}" />
     </DockPanel>
