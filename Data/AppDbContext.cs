@@ -50,17 +50,20 @@ namespace InventoryApp.Data
                     new Supplier { Name = "Метро" },
                     new Supplier { Name = "Булмаг" },
                     new Supplier { Name = "Верея" },
-                    new Supplier { Name = "Дерони" }
+                    new Supplier { Name = "Дерони" },
+                    new Supplier { Name = "Тандем" }
                 );
             }
 
             if (!Categories.Any())
             {
                 Categories.AddRange(
-                    new Category { Name = "Месо" },
-                    new Category { Name = "Млечни" },
+                    new Category { Name = "Месо и месни продукти" },
+                    new Category { Name = "Млечни продукти" },
+                    new Category { Name = "Консервирани храни" },
                     new Category { Name = "Плодове" },
-                    new Category { Name = "Зеленчуци" }
+                    new Category { Name = "Зеленчуци" },
+                    new Category { Name = "Напитки" }
                 );
             }
 
@@ -69,22 +72,89 @@ namespace InventoryApp.Data
             if (!Products.Any())
             {
                 var metro = Suppliers.First(s => s.Name == "Метро");
-                var mlechni = Categories.First(c => c.Name == "Млечни");
+                var bulmag = Suppliers.First(s => s.Name == "Булмаг");
+                var vereq = Suppliers.First(s => s.Name == "Верея");
+                var deroni = Suppliers.First(s => s.Name == "Дерони");
+                var tandem = Suppliers.First(s => s.Name == "Тандем");
+                var meso = Categories.First(c => c.Name == "Месо и месни продукти");
+                var mlechni = Categories.First(c => c.Name == "Млечни продукти");
+                var konservi = Categories.First(c => c.Name == "Консервирани храни");
+                var plodove = Categories.First(c => c.Name == "Плодове");
+                var zelenchuci = Categories.First(c => c.Name == "Зеленчуци");
+                var napitki = Categories.First(c => c.Name == "Напитки");
 
                 var product1 = new Product
                 {
-                    Name = "Кисело мляко",
-                    Price = 2,
-                    Quantity = 100,
+                    Name = "Кашкавал Верея",
+                    Price = 7,
+                    Quantity = 10,
                     SupplierId = metro.Id
                 };
+                var product2 = new Product
+                            {
+                                Name = "Лютеница",
+                                Price = 3,
+                                Quantity = 100,
+                                SupplierId = deroni.Id
+                            };
+
+                var product3 = new Product
+                {
+                    Name = "Розови домати",
+                    Price = 4,
+                    Quantity = 120,
+                    SupplierId = vereq.Id
+                };
+                var product4 = new Product
+                {
+                    Name = "Свински врат",
+                    Price = 13,
+                    Quantity = 12,
+                    SupplierId = tandem.Id
+                };
+                var product5 = new Product
+                {
+                    Name = "Минерална вода",
+                    Price = 1,
+                    Quantity = 9,
+                    SupplierId = bulmag.Id
+                };
                 Products.Add(product1);
+                Products.Add(product2);
+                Products.Add(product3);
+                Products.Add(product4);
+                Products.Add(product5);
                 SaveChanges();
 
                 ProductCategories.Add(new ProductCategory
                 {
                     ProductId = product1.Id,
-                    CategoryId = mlechni.Id
+                    CategoryId = mlechni.Id,
+                });
+                ProductCategories.Add(new ProductCategory
+                {
+                    ProductId = product2.Id,
+                    CategoryId = konservi.Id,
+                });
+                ProductCategories.Add(new ProductCategory
+                {
+                    ProductId = product3.Id,
+                    CategoryId = plodove.Id,
+                });
+                ProductCategories.Add(new ProductCategory
+                {
+                    ProductId = product3.Id,
+                    CategoryId = zelenchuci.Id,
+                });
+                ProductCategories.Add(new ProductCategory
+                {
+                    ProductId = product4.Id,
+                    CategoryId = meso.Id,
+                });
+                ProductCategories.Add(new ProductCategory
+                {
+                    ProductId = product5.Id,
+                    CategoryId = napitki.Id,
                 });
 
                 SaveChanges();
