@@ -15,7 +15,7 @@
 
         </StackPanel>
 
-        <ListView ItemsSource="{Binding CartItems}" Margin="0 0 0 10">
+        <ListView ItemsSource="{Binding CartItems}" Margin="0 0 0 10" Width="850" MaxWidth="850">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Продукт" DisplayMemberBinding="{Binding Product.Name}" />
